@@ -8,11 +8,11 @@
   </head>
   <body>
     <div class="container">
-      <h1>Formulario de Registro</h1>
+      <h1>Formulario de Especialización Ing. Software</h1>
 
       <!-- FORMULARIO HTML -->
       <form id="miFormulario">
-        <!-- Campo de texto simple -->
+        <!-- Campo de texto para Nombre completo -->
         <div class="form-group">
           <label for="nombre">Nombre completo:</label>
           <input
@@ -22,7 +22,31 @@
             required
             placeholder="Escribe tu nombre completo"
             autofocus
-            pattern="[A-za-z ]{3,40}" />
+            pattern="[A-Za-z ]{3,40}" />
+        </div>
+
+        <!-- Campo de texto para Apellido -->
+        <div class="form-group">
+          <label for="apellido">Apellido:</label>
+          <input
+            type="text"
+            id="apellido"
+            name="apellido"
+            required
+            placeholder="Escribe tu apellido"
+            pattern="[A-Za-z ]{3,40}" />
+        </div>
+
+        <!-- Campo de texto para Número celular -->
+        <div class="form-group">
+          <label for="celular">Número celular:</label>
+          <input
+            type="tel"
+            id="celular"
+            name="celular"
+            required
+            placeholder="Ej: 3001234567"
+            pattern="[0-9]{7,15}" />
         </div>
 
         <!-- Campo de email -->
@@ -62,30 +86,40 @@
           </select>
         </div>
 
-        <!-- Campos de radio -->
         <div class="form-group">
-          <label>Experiencia en programación:</label>
-          <input
-            type="radio"
-            id="principiante"
-            name="experiencia"
-            value="principiante"
-            required />
-          <label for="principiante" style="display: inline; margin-left: 5px">Principiante</label><br />
+          <label for="especialidad">Especialidad:</label>
+          <select id="especialidad" name="especialidad" required>
+            <option value="">Selecciona en qué se especializa</option>
+            <option value="frond-end">Frond-end</option>
+            <option value="back-end">Back-end</option>
+            <option value="modelado y simulación">Modelado y simulación</option>
+            <option value="sistemas centrados en la red">Sistemas centrados en la red</option>
+            <option value="sistemas de juego y entretenimiento">Sistemas de juego y entretenimiento</option>
+            <option value="sistemas de información geográfica">Sistemas de información geográfica</option>
+            <option value="sistemas digitales y embebidos">Sistemas digitales y embebidos</option>
+            <option value="director IT">Director IT</option>
+            <option value="diseñador de sitios web">Diseñador de sitios web</option>
+          </select>
+        </div>
 
-          <input
-            type="radio"
-            id="intermedio"
-            name="experiencia"
-            value="intermedio" />
-          <label for="intermedio" style="display: inline; margin-left: 5px">Intermedio</label><br />
+        <!-- Campos de radio -->
+        <div class="form-group experiencia">
+          <label>Experiencia en programación:</label><br />
 
-          <input
-            type="radio"
-            id="avanzado"
-            name="experiencia"
-            value="avanzado" />
-          <label for="avanzado" style="display: inline; margin-left: 5px">Avanzado</label>
+          <label for="principiante">
+            <input type="radio" id="principiante" name="experiencia" value="principiante" required />
+            Principiante
+          </label>
+
+          <label for="intermedio">
+            <input type="radio" id="intermedio" name="experiencia" value="intermedio" />
+            Intermedio
+          </label>
+
+          <label for="avanzado">
+            <input type="radio" id="avanzado" name="experiencia" value="avanzado" />
+            Avanzado
+          </label>
         </div>
 
         <!-- Checkbox -->
@@ -99,19 +133,15 @@
         <!-- Área de texto -->
         <div class="form-group">
           <label for="comentarios">Comentarios adicionales:</label>
-          <textarea
-            id="comentarios"
-            name="comentarios"
-            rows="4"
-            placeholder="Cuéntanos algo más sobre ti (opcional)"></textarea>
+          <textarea id="comentarios" name="comentarios" rows="4" placeholder="Cuéntanos algo más sobre ti (opcional)"></textarea>
         </div>
 
         <!-- Botón de envío -->
-        <button type="submit"> Enviar Formulario</button>
+        <button type="submit">Enviar Formulario</button>
       </form>
 
       <!-- ÁREA DONDE SE MOSTRARÁN LOS RESULTADOS -->
-      <div id="resultado" class="resultado">
+      <div id="resultado" class="resultado" style="display: none;">
         <h3>✅ ¡Formulario enviado exitosamente!</h3>
         <p>Estos son los datos que enviaste:</p>
         <div id="datosEnviados"></div>
@@ -120,77 +150,69 @@
 
     <script>
       // 🎯 SIMULACIÓN DEL ENVÍO DEL FORMULARIO
+      document.getElementById('miFormulario').addEventListener('submit', function (evento) {
+        evento.preventDefault();
 
-      // Esperar a que el formulario sea enviado
-      document
-        .getElementById('miFormulario')
-        .addEventListener('submit', function (evento) {
-          // 1. Prevenir que la página se recargue (comportamiento por defecto)
-          evento.preventDefault();
+        const formulario = evento.target;
+        const datosFormulario = new FormData(formulario);
 
-          // 2. Capturar todos los datos del formulario
-          const formulario = evento.target;
-          const datosFormulario = new FormData(formulario);
+        console.log('Datos del formulario:');
+        for (let [campo, valor] of datosFormulario.entries()) {
+          console.log(`${campo}: ${valor}`);
+        }
 
-          // 3. Mostrar los datos en la consola (para estudiantes avanzados)
-          console.log(' Datos del formulario:');
-          for (let [campo, valor] of datosFormulario.entries()) {
-            console.log(`${campo}: ${valor}`);
+        let datosHTML = '';
+
+        for (let [campo, valor] of datosFormulario.entries()) {
+          let nombreCampo = campo;
+          switch (campo) {
+            case 'nombre':
+              nombreCampo = 'Nombre completo';
+              break;
+            case 'apellido':
+              nombreCampo = 'Apellido';
+              break;
+            case 'celular':
+              nombreCampo = 'Número celular';
+              break;
+            case 'email':
+              nombreCampo = 'Correo electrónico';
+              break;
+            case 'edad':
+              nombreCampo = 'Edad';
+              break;
+            case 'ciudad':
+              nombreCampo = 'Ciudad';
+              break;
+            case 'especialidad':
+              nombreCampo = 'Especialidad';
+              break;
+            case 'experiencia':
+              nombreCampo = 'Experiencia en programación';
+              break;
+            case 'acepto':
+              nombreCampo = 'Términos aceptados';
+              break;
+            case 'comentarios':
+              nombreCampo = 'Comentarios';
+              break;
           }
 
-          // 4. Convertir los datos a un formato legible
-          let datosHTML = '';
-
-          // Recorrer cada campo y crear HTML para mostrar
-          for (let [campo, valor] of datosFormulario.entries()) {
-            // Hacer más legibles los nombres de los campos
-            let nombreCampo = campo;
-            switch (campo) {
-              case 'nombre':
-                nombreCampo = 'Nombre completo';
-                break;
-              case 'email':
-                nombreCampo = 'Correo electrónico';
-                break;
-              case 'edad':
-                nombreCampo = 'Edad';
-                break;
-              case 'ciudad':
-                nombreCampo = 'Ciudad';
-                break;
-              case 'experiencia':
-                nombreCampo = 'Experiencia en programación';
-                break;
-              case 'acepto':
-                nombreCampo = 'Términos aceptados';
-                break;
-              case 'comentarios':
-                nombreCampo = 'Comentarios';
-                break;
-            }
-
-            // Si el campo tiene valor, mostrarlo
-            if (valor && valor.trim() !== '') {
-              datosHTML += `
-                <div class="dato">
-                  <span class="etiqueta">${nombreCampo}:</span> ${valor}
-                </div>
-              `;
-            }
+          if (valor && valor.trim() !== '') {
+            datosHTML += `
+              <div class="dato">
+                <span class="etiqueta">${nombreCampo}:</span> ${valor}
+              </div>
+            `;
           }
+        }
 
-          // 5. Mostrar los resultados en la página
-          document.getElementById('datosEnviados').innerHTML = datosHTML;
-          document.getElementById('resultado').style.display = 'block';
+        document.getElementById('datosEnviados').innerHTML = datosHTML;
+        document.getElementById('resultado').style.display = 'block';
+        document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
 
-          // 6. Scroll suave hacia los resultados
-          document.getElementById('resultado').scrollIntoView({
-            behavior: 'smooth',
-          });
-
-          // 7. Mensaje de confirmación adicional
-          alert('¡Formulario enviado correctamente! 🎉\nRevisa los datos más abajo.');
-        });
+        alert('¡Formulario enviado correctamente! 🎉\nRevisa los datos más abajo.');
+      });
 
       // 🎯 FUNCIONALIDAD EXTRA: Limpiar formulario
       function limpiarFormulario() {
@@ -198,7 +220,7 @@
         document.getElementById('resultado').style.display = 'none';
       }
 
-      // Agregar botón de limpiar después del envío
+      // Botón de limpiar
       document.addEventListener('DOMContentLoaded', function () {
         const contenedor = document.querySelector('.container');
         const botonLimpiar = document.createElement('button');
